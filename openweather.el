@@ -129,6 +129,15 @@ You should get it by logging-in to your account and settings this variable."
 \\{openweather-mode-map}"
   :group 'openweather)
 
+(defvar openweather--data nil
+  "Store OpenWeather data from `json-read'.")
+
+(defun openweather-make-url (lat lon units &optional msl)
+  "Create the URL from LAT and LON in UNITS to be used by `openweather-update'.
+Requires your OpenWeatherMap AppID."
+  (format "https://api.openweathermap.org/data/2.5/onecall?lat=%s&lon=%s&appid=%s&mode=json&units=%s&cnt=5"
+          lat lon openweather-appid (url-encode-url (symbol-name units))))
+
 ;;;###autoload
 (defun openweather-update (&optional no-switch)
   "Display weather forecast.
@@ -149,6 +158,35 @@ If NO-SWITCH is non-nil then do not switch to weather forecast buffer."
         (openweather--insert 'openweather-date
                              "* For "
                              (format-time-string "%A %Y-%m-%d") "\n")
+        (let ((url (openweather-make-url openweather-location-latitude
+                                         openweather-location-longitude
+                                         openweather-units)))
+          (url-retrieve url
+                        (lambda (status start-time)
+                          (message "The request is completed in %f seconds"
+                                   (float-time (time-subtract nil start-time)))
+                          ;; (display-buffer (current-buffer))
+                          (save-excursion
+                            (goto-char (point-min))
+                            (unless (search-forward "\n\n" nil t)
+                              (kill-buffer)
+                              (error "Error in http reply"))
+                            (let ((headers (buffer-substring (point-min) (point))))
+                              (unless (string-match-p
+                                       (concat "^HTTP/1.1 "
+                                               "\\(200 OK\\|203 "
+                                               "Non-Authoritative Information\\)")
+                                       headers)
+                                (kill-buffer)
+                                (error "Unable to fetch data"))
+                              (url-store-in-cache (current-buffer))
+                              (setq openweather--data (json-read))
+                              (kill-buffer)))
+                          )
+                        `(,(current-time))
+                        'silent
+                        'inhibit-cookies))
+        (insert (format "%s" openweather--data))
         )) ;; end of let and save-excursion
     (goto-char (point-min)))
   (unless no-switch
