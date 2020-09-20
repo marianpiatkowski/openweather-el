@@ -1,5 +1,30 @@
 ;;; openweather.el --- Weather data from OpenWeather in Emacs -*- lexical binding: t -*-
 
+;; Copyright (C) 2020 Marian Piatkowski <marianpiatkowski@web.de>
+
+;; Author: Marian Piatkowski <marianpiatkowski@web.de>
+;; URL: https://github.com/marianpiatkowski/openweather-el
+;; Keywords: comm
+
+;; This file is NOT part of GNU Emacs.
+
+;; openweather-el is free software: you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; openweather-el is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with openweather-el.  If not, see <http://www.gnu.org/licenses/>.
+
+;;; Commentary:
+
+;; See https://openweathermap.org/api/one-call-api
+
 ;;; Code:
 
 (require 'cl-lib)
@@ -426,6 +451,8 @@ Requires your OpenWeatherMap AppID."
 
 ;;; ======== end of formatting functions ========
 
+;;; ======== functions for processing type of forecast ========
+
 (defun openweather--process-current (attributes)
   "Format current forecast."
   (openweather--insert 'font-lock-function-name-face
@@ -491,6 +518,8 @@ Requires your OpenWeatherMap AppID."
                                                                          (cdr (assoc 'sunrise (elt attributes n))))))
     (insert "\n")))
 
+;;; ======== end of functions for processing type of forecast ========
+
 ;;;###autoload
 (defun openweather-update (&optional no-switch)
   "Display weather forecast.
@@ -553,7 +582,6 @@ If NO-SWITCH is non-nil then do not switch to weather forecast buffer."
                (insert (format "Unknown entry %s\n" entry)))))
 
 
-        ;; (insert (format "%s" openweather--data))
         )) ;; end of let and save-excursion
     (goto-char (point-min)))
   (unless no-switch
