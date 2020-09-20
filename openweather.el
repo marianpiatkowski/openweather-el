@@ -173,72 +173,72 @@ Requires your OpenWeatherMap AppID."
                          (format "*** Sunset %02d:%02d:%02d\n" (nth 2 d) (nth 1 d) (nth 0 d)))))
 
 (defun openweather--format-current--temp (value)
-  "Format temperature of current forecast."
+  "Format temperature in current forecast."
   (let ((temp-symbol (openweather-temperature-unit)))
     (openweather--insert 'font-lock-keyword-face
                          (concat "*** Temperature "
                                  (format "%s%s\n" value temp-symbol)))))
 
 (defun openweather--format-current--feels_like (value)
-  "Format 'feels like temperature of current forecast."
+  "Format 'feels like temperature in current forecast."
   (let ((temp-symbol (openweather-temperature-unit)))
     (openweather--insert 'font-lock-keyword-face
                          (concat "*** Feels like "
                                  (format "%s%s\n" value temp-symbol)))))
 
 (defun openweather--format-current--pressure (value)
-  "Format pressure of current forecast."
+  "Format pressure in current forecast."
   (openweather--insert 'font-lock-keyword-face
                        (format "*** Pressure %shPa\n" value)))
 
 (defun openweather--format-current--humidity (value)
-  "Format humidity of current forecast."
+  "Format humidity in current forecast."
   (openweather--insert 'font-lock-keyword-face
                        (format "*** Humidity %s%%\n" value)))
 
 (defun openweather--format-current--dew_point (value)
-  "Format dewpoint temperature of current forecast."
+  "Format dewpoint temperature in current forecast."
   (let ((temp-symbol (openweather-temperature-unit)))
     (openweather--insert 'font-lock-keyword-face
                          (concat "*** Dewpoint temperature "
                                  (format "%s%s\n" value temp-symbol)))))
 
 (defun openweather--format-current--uvi (value)
-  "Format UV index of current forecast."
+  "Format UV index in current forecast."
   (openweather--insert 'font-lock-keyword-face
                        (format "*** UV index %s\n" value)))
 
 (defun openweather--format-current--clouds (value)
-  "Format cloudiness of current forecast."
+  "Format cloudiness in current forecast."
   (openweather--insert 'font-lock-keyword-face
                        (format "*** Clouds %s%%\n" value)))
 
 (defun openweather--format-current--visibility (value)
-  "Format average visibility of current forecast."
+  "Format average visibility in current forecast."
   (openweather--insert 'font-lock-keyword-face
                        (format "*** Visibility (avg) %sm\n" value)))
 
 (defun openweather--format-current--wind_speed (value)
-  "Format wind speed of current forecast."
+  "Format wind speed in current forecast."
   (let ((velo-symbol (openweather-velocity-unit)))
     (openweather--insert 'font-lock-keyword-face
                          (concat "*** Wind speed "
                                  (format "%s%s\n" value velo-symbol)))))
 
 (defun openweather--format-current--wind_gust (value)
-  "Format wind gust of current forecast."
+  "Format wind gust in current forecast."
   (let ((velo-symbol (openweather-velocity-unit)))
     (openweather--insert 'font-lock-keyword-face
                          (concat "*** Wind gust "
                                  (format "%s%s\n" value velo-symbol)))))
 
 (defun openweather--format-current--wind_deg (value)
-  "Format wind direction of current forecast."
+  "Format wind direction in current forecast."
   (openweather--insert 'font-lock-keyword-face
                        (format "*** Wind direction %s°\n" value)))
 
 (defun openweather--format-current--weather (attributes)
-  "Format weather summary of current forecast."
+  "Format weather summary in current forecast."
   ;; extract single element from json array
   (let ((attrs (elt attributes 0)))
     (openweather--insert 'font-lock-keyword-face
@@ -247,6 +247,117 @@ Requires your OpenWeatherMap AppID."
                                  (cdr (assoc 'icon attrs))))))
 
 ;;; ======== formatting functions for minutely forecast ========
+
+(defun openweather--format-minutely--dt (value)
+  "Format time in minutely forecast."
+  (let ((d (decode-time (seconds-to-time value))))
+    (openweather--insert 'font-lock-keyword-face
+                         (format "*** %02d:%02d " (nth 2 d) (nth 1 d)))))
+
+(defun openweather--format-minutely--precipitation (value)
+  "Format precipitation in minutely forecast."
+  (openweather--insert 'font-lock-keyword-face
+                       (format "%smm\n" value)))
+
+;;; ======== formatting functions for hourly forecast ========
+
+(defun openweather--format-hourly--dt (value)
+  "Format time in hourly forecast."
+  (openweather--insert 'font-lock-function-name-face
+                       (format-time-string "%A %F %H:%M\n" value)))
+
+(defun openweather--format-hourly--temp (value)
+  "Format temperature in hourly forecast."
+  (let ((temp-symbol (openweather-temperature-unit)))
+    (openweather--insert 'font-lock-keyword-face
+                         (concat "*** Temperature "
+                                 (format "%s%s\n" value temp-symbol)))))
+
+(defun openweather--format-hourly--feels_like (value)
+  "Format 'feels like temperature in hourly forecast."
+  (let ((temp-symbol (openweather-temperature-unit)))
+    (openweather--insert 'font-lock-keyword-face
+                         (concat "*** Feels like "
+                                 (format "%s%s\n" value temp-symbol)))))
+
+(defun openweather--format-hourly--pressure (value)
+  "Format pressure in hourly forecast."
+  (openweather--insert 'font-lock-keyword-face
+                       (format "*** Pressure %shPa\n" value)))
+
+(defun openweather--format-hourly--humidity (value)
+  "Format humidity in hourly forecast."
+  (openweather--insert 'font-lock-keyword-face
+                       (format "*** Humidity %s%%\n" value)))
+
+(defun openweather--format-hourly--dew_point (value)
+  "Format dewpoint temperature in hourly forecast."
+  (let ((temp-symbol (openweather-temperature-unit)))
+    (openweather--insert 'font-lock-keyword-face
+                         (concat "*** Dewpoint temperature "
+                                 (format "%s%s\n" value temp-symbol)))))
+
+(defun openweather--format-hourly--clouds (value)
+  "Format cloudiness in hourly forecast."
+  (openweather--insert 'font-lock-keyword-face
+                       (format "*** Clouds %s%%\n" value)))
+
+(defun openweather--format-hourly--visibility (value)
+  "Format average visibility in hourly forecast."
+  (openweather--insert 'font-lock-keyword-face
+                       (format "*** Visibility (avg) %sm\n" value)))
+
+(defun openweather--format-hourly--wind_speed (value)
+  "Format wind speed in hourly forecast."
+  (let ((velo-symbol (openweather-velocity-unit)))
+    (openweather--insert 'font-lock-keyword-face
+                         (concat "*** Wind speed "
+                                 (format "%s%s\n" value velo-symbol)))))
+
+(defun openweather--format-hourly--wind_gust (value)
+  "Format wind gust in hourly forecast."
+  (let ((velo-symbol (openweather-velocity-unit)))
+    (openweather--insert 'font-lock-keyword-face
+                         (concat "*** Wind gust "
+                                 (format "%s%s\n" value velo-symbol)))))
+
+(defun openweather--format-hourly--wind_deg (value)
+  "Format wind direction in hourly forecast."
+  (openweather--insert 'font-lock-keyword-face
+                       (format "*** Wind direction %s°\n" value)))
+
+(defun openweather--format-hourly--weather (attributes)
+  "Format weather summary in hourly forecast."
+  ;; extract single element from json array
+  (let ((attrs (elt attributes 0)))
+    (openweather--insert 'font-lock-keyword-face
+                         (format "*** Conditions %s %s\n"
+                                 (cdr (assoc 'description attrs))
+                                 (cdr (assoc 'icon attrs))))))
+
+(defun openweather--format-hourly--pop (value)
+  "Format probability of precipitation in hourly forecast."
+  (openweather--insert 'font-lock-keyword-face
+                       (format "*** Probability of precipitation %s\n" value)))
+
+;;; ======== formatting functions for daily forecast ========
+
+(defun openweather--format-daily--dt (value)
+  "Format time in hourly forecast."
+  (openweather--insert 'font-lock-function-name-face
+                       (format-time-string "%A %F\n" value)))
+
+(defun openweather--format-daily--sunrise (value)
+  "Format time of daily sunrise."
+  (let ((d (decode-time (seconds-to-time value))))
+    (openweather--insert 'font-lock-keyword-face
+                         (format "*** Sunrise %02d:%02d:%02d\n" (nth 2 d) (nth 1 d) (nth 0 d)))))
+
+(defun openweather--format-daily--sunset (value)
+  "Format time of daily sunset."
+  (let ((d (decode-time (seconds-to-time value))))
+    (openweather--insert 'font-lock-keyword-face
+                         (format "*** Sunset %02d:%02d:%02d\n" (nth 2 d) (nth 1 d) (nth 0 d)))))
 
 ;;; ======== end of formatting functions ========
 
@@ -270,20 +381,50 @@ Requires your OpenWeatherMap AppID."
 (defun openweather--process-minutely (attributes)
   "Format every minute forecast for 1h period."
   (openweather--insert 'font-lock-function-name-face
-                       "** Minutely ")
-  (insert "\n"))
+                       "** Every minute precipitation\n")
+  ;; loop over json array and extract each element
+  (dotimes (n (length attributes))
+    ;; now iterate over list for this element from json array
+    (dolist (attr (elt attributes n))
+      (let ((formatter (intern (concat "openweather--format-minutely--"
+                                       (symbol-name (car attr))))))
+        (if (fboundp formatter)
+            (funcall formatter (cdr attr))
+          (insert (format "Unknown entry %s\n" attr)))))))
 
 (defun openweather--process-hourly (attributes)
   "Format hourly forecast."
-  (openweather--insert 'font-lock-function-name-face
-                       "** Hourly ")
-  (insert "\n"))
+  ;; loop over json array and extract each element
+  (dotimes (n (length attributes))
+    (openweather--insert 'font-lock-function-name-face
+                         "** Hourly for ")
+    ;; now iterate over list for this element from json array
+    (dolist (attr (elt attributes n))
+      (let ((formatter (intern (concat "openweather--format-hourly--"
+                                       (symbol-name (car attr))))))
+        (if (fboundp formatter)
+            (funcall formatter (cdr attr))
+          (insert (format "Unknown entry %s\n" attr)))))))
 
 (defun openweather--process-daily (attributes)
   "Format daily forecast."
-  (openweather--insert 'font-lock-function-name-face
-                       "** Daily ")
-  (insert "\n"))
+  ;; loop over json array and extract each element
+  (dotimes (n (length attributes))
+    (openweather--insert 'font-lock-function-name-face
+                         "** Daily for ")
+    ;; now iterate over list for this element from json array
+    (dolist (attr (elt attributes n))
+      (let ((formatter (intern (concat "openweather--format-daily--"
+                                       (symbol-name (car attr))))))
+        (if (fboundp formatter)
+            (funcall formatter (cdr attr))
+          (insert (format "Unknown entry %s\n" attr)))))
+    ;; calculate daytime as well
+    (openweather--insert 'font-lock-keyword-face
+                         (format "*** Daytime %s"
+                                 (openweather--calculate-time-difference (cdr (assoc 'sunset (elt attributes n)))
+                                                                         (cdr (assoc 'sunrise (elt attributes n))))))
+    (insert "\n")))
 
 ;;;###autoload
 (defun openweather-update (&optional no-switch)
