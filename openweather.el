@@ -359,6 +359,71 @@ Requires your OpenWeatherMap AppID."
     (openweather--insert 'font-lock-keyword-face
                          (format "*** Sunset %02d:%02d:%02d\n" (nth 2 d) (nth 1 d) (nth 0 d)))))
 
+(defun openweather--format-daily--pressure (value)
+  "Format pressure in daily forecast."
+  (openweather--insert 'font-lock-keyword-face
+                       (format "*** Pressure %shPa\n" value)))
+
+(defun openweather--format-daily--humidity (value)
+  "Format humidity in daily forecast."
+  (openweather--insert 'font-lock-keyword-face
+                       (format "*** Humidity %s%%\n" value)))
+
+(defun openweather--format-daily--dew_point (value)
+  "Format dewpoint temperature in daily forecast."
+  (let ((temp-symbol (openweather-temperature-unit)))
+    (openweather--insert 'font-lock-keyword-face
+                         (concat "*** Dewpoint temperature "
+                                 (format "%s%s\n" value temp-symbol)))))
+
+(defun openweather--format-daily--wind_speed (value)
+  "Format wind speed in daily forecast."
+  (let ((velo-symbol (openweather-velocity-unit)))
+    (openweather--insert 'font-lock-keyword-face
+                         (concat "*** Wind speed "
+                                 (format "%s%s\n" value velo-symbol)))))
+
+(defun openweather--format-daily--wind_gust (value)
+  "Format wind gust in daily forecast."
+  (let ((velo-symbol (openweather-velocity-unit)))
+    (openweather--insert 'font-lock-keyword-face
+                         (concat "*** Wind gust "
+                                 (format "%s%s\n" value velo-symbol)))))
+
+(defun openweather--format-daily--wind_deg (value)
+  "Format wind direction in daily forecast."
+  (openweather--insert 'font-lock-keyword-face
+                       (format "*** Wind direction %s°\n" value)))
+
+(defun openweather--format-daily--weather (attributes)
+  "Format weather summary in daily forecast."
+  ;; extract single element from json array
+  (let ((attrs (elt attributes 0)))
+    (openweather--insert 'font-lock-keyword-face
+                         (format "*** Conditions %s %s\n"
+                                 (cdr (assoc 'description attrs))
+                                 (cdr (assoc 'icon attrs))))))
+
+(defun openweather--format-daily--clouds (value)
+  "Format cloudiness in daily forecast."
+  (openweather--insert 'font-lock-keyword-face
+                       (format "*** Clouds %s%%\n" value)))
+
+(defun openweather--format-daily--pop (value)
+  "Format probability of precipitation in daily forecast."
+  (openweather--insert 'font-lock-keyword-face
+                       (format "*** Probability of precipitation %s\n" value)))
+
+(defun openweather--format-daily--rain (value)
+  "Format precipitation in daily forecast."
+  (openweather--insert 'font-lock-keyword-face
+                       (format "*** Rain %smm\n" value)))
+
+(defun openweather--format-daily--uvi (value)
+  "Format UV index in daily forecast."
+  (openweather--insert 'font-lock-keyword-face
+                       (format "*** UV index %s\n" value)))
+
 ;;; ======== end of formatting functions ========
 
 (defun openweather--process-current (attributes)
