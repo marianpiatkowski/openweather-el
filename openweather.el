@@ -205,7 +205,7 @@ Requires your OpenWeatherMap AppID."
                                  (format "%s%s\n" value temp-symbol)))))
 
 (defun openweather--format-current--feels_like (value)
-  "Format 'feels like temperature in current forecast."
+  "Format 'feels like' temperature in current forecast."
   (let ((temp-symbol (openweather-temperature-unit)))
     (openweather--insert 'font-lock-keyword-face
                          (concat "*** Feels like "
@@ -270,6 +270,13 @@ Requires your OpenWeatherMap AppID."
                          (format "*** Conditions %s %s\n"
                                  (cdr (assoc 'description attrs))
                                  (cdr (assoc 'icon attrs))))))
+
+(defun openweather--format-current--rain (attribute)
+  "Format rain volume in current forecast."
+  (openweather--insert 'font-lock-keyword-face
+                       (format "*** Rain volume for last %s %smm\n"
+                               (car (assoc '1h attribute))
+                               (cdr (assoc '1h attribute)))))
 
 ;;; ======== formatting functions for minutely forecast ========
 
@@ -365,6 +372,13 @@ Requires your OpenWeatherMap AppID."
   (openweather--insert 'font-lock-keyword-face
                        (format "*** Probability of precipitation %s\n" value)))
 
+(defun openweather--format-hourly--rain (attribute)
+  "Format rain volume in hourly forecast."
+  (openweather--insert 'font-lock-keyword-face
+                       (format "*** Rain volume for last %s %smm\n"
+                               (car (assoc '1h attribute))
+                               (cdr (assoc '1h attribute)))))
+
 ;;; ======== formatting functions for daily forecast ========
 
 (defun openweather--format-daily--dt (value)
@@ -383,6 +397,24 @@ Requires your OpenWeatherMap AppID."
   (let ((d (decode-time (seconds-to-time value))))
     (openweather--insert 'font-lock-keyword-face
                          (format "*** Sunset %02d:%02d:%02d\n" (nth 2 d) (nth 1 d) (nth 0 d)))))
+
+(defun openweather--format-daily--temp (attributes)
+  "Format temperature in daily forecast."
+  (openweather--insert 'font-lock-keyword-face "*** Temperature")
+  (let ((temp-symbol (openweather-temperature-unit)))
+    (dolist (attr attributes)
+      (openweather--insert 'font-lock-keyword-face
+                           (format " (%s) %s%s" (car attr) (cdr attr) temp-symbol))))
+  (insert "\n"))
+
+(defun openweather--format-daily--feels_like (attributes)
+  "Format 'feels like' temperature in daily forecast."
+  (openweather--insert 'font-lock-keyword-face "*** Feels like")
+  (let ((temp-symbol (openweather-temperature-unit)))
+    (dolist (attr attributes)
+      (openweather--insert 'font-lock-keyword-face
+                           (format " (%s) %s%s" (car attr) (cdr attr) temp-symbol))))
+  (insert "\n"))
 
 (defun openweather--format-daily--pressure (value)
   "Format pressure in daily forecast."
