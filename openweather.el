@@ -278,6 +278,13 @@ Requires your OpenWeatherMap AppID."
                                (car (assoc '1h attribute))
                                (cdr (assoc '1h attribute)))))
 
+(defun openweather--format-current--snow (attribute)
+  "Format snow volume in current forecast."
+  (openweather--insert 'font-lock-keyword-face
+                       (format "*** Snow volume for last %s %smm\n"
+                               (car (assoc '1h attribute))
+                               (cdr (assoc '1h attribute)))))
+
 ;;; ======== formatting functions for minutely forecast ========
 
 (defun openweather--format-minutely--dt (value)
@@ -376,6 +383,13 @@ Requires your OpenWeatherMap AppID."
   "Format rain volume in hourly forecast."
   (openweather--insert 'font-lock-keyword-face
                        (format "*** Rain volume for last %s %smm\n"
+                               (car (assoc '1h attribute))
+                               (cdr (assoc '1h attribute)))))
+
+(defun openweather--format-hourly--snow (attribute)
+  "Format snow volume in hourly forecast."
+  (openweather--insert 'font-lock-keyword-face
+                       (format "*** Snow volume for last %s %smm\n"
                                (car (assoc '1h attribute))
                                (cdr (assoc '1h attribute)))))
 
@@ -480,6 +494,11 @@ Requires your OpenWeatherMap AppID."
   "Format UV index in daily forecast."
   (openweather--insert 'font-lock-keyword-face
                        (format "*** UV index %s\n" value)))
+
+(defun openweather--format-daily--snow (value)
+  "Format snow volume in daily forecast."
+  (openweather--insert 'font-lock-keyword-face
+                       (format "*** Snow %smm\n" value)))
 
 ;;; ======== end of formatting functions ========
 
