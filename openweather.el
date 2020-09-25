@@ -587,6 +587,8 @@ If NO-SWITCH is non-nil then do not switch to weather forecast buffer."
         (remove-images (point-min) (point-max))
 
         (openweather-mode)
+        ;; enable outline-minor-mode to do folding of entries in buffer
+        (outline-minor-mode)
         (erase-buffer)
         (goto-char (point-min))
         (openweather--insert 'openweather-header
