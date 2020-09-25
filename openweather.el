@@ -1,4 +1,4 @@
-;;; openweather.el --- Weather data from OpenWeather in Emacs -*- lexical binding: t -*-
+;;; openweather.el --- Weather data from OpenWeather in Emacs
 
 ;; Copyright (C) 2020 Marian Piatkowski <marianpiatkowski@web.de>
 
