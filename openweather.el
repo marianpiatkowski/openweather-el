@@ -291,12 +291,12 @@ Requires your OpenWeatherMap AppID."
   "Format time in minutely forecast."
   (let ((d (decode-time (seconds-to-time value))))
     (openweather--insert 'font-lock-keyword-face
-                         (format "*** %02d:%02d " (nth 2 d) (nth 1 d)))))
+                         (format " %02d:%02d " (nth 2 d) (nth 1 d)))))
 
 (defun openweather--format-minutely--precipitation (value)
   "Format precipitation in minutely forecast."
   (openweather--insert 'font-lock-keyword-face
-                       (format "%smm\n" value)))
+                       (format "%smm" value)))
 
 ;;; ======== formatting functions for hourly forecast ========
 
@@ -527,13 +527,18 @@ Requires your OpenWeatherMap AppID."
                        "** Every minute precipitation\n")
   ;; loop over json array and extract each element
   (dotimes (n (length attributes))
+    (if (= 0 (% n 5))
+        (openweather--insert 'font-lock-keyword-face "***"))
     ;; now iterate over list for this element from json array
     (dolist (attr (elt attributes n))
       (let ((formatter (intern (concat "openweather--format-minutely--"
                                        (symbol-name (car attr))))))
         (if (fboundp formatter)
             (funcall formatter (cdr attr))
-          (insert (format "Unknown entry %s\n" attr)))))))
+          (insert (format "Unknown entry %s\n" attr)))))
+    (if (= 4 (% n 5))
+        (insert "\n")))
+  (insert "\n"))
 
 (defun openweather--process-hourly (attributes)
   "Format hourly forecast."
