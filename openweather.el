@@ -296,7 +296,7 @@ Requires your OpenWeatherMap AppID."
 (defun openweather--format-minutely--precipitation (value)
   "Format precipitation in minutely forecast."
   (openweather--insert 'font-lock-keyword-face
-                       (format "%smm" value)))
+                       (format "%0.3fmm" value)))
 
 ;;; ======== formatting functions for hourly forecast ========
 
