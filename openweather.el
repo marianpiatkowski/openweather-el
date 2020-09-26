@@ -177,6 +177,25 @@ Requires your OpenWeatherMap AppID."
   "Calculate time1 - time2."
   (format-seconds "%Y, %D, %H, %M, %z%S" (time-to-seconds (time-subtract time1 time2))))
 
+(defun openweather--calculate-wind_dir (value)
+  "Calculate wind direction from degrees."
+  (cond ((and (>= value 337.5) (<= value 22.5))
+         (string ?N))
+        ((and (>= value 22.5) (<= value 67.5))
+         (string ?N ?E))
+        ((and (>= value 67.5) (<= value 112.5))
+         (string ?E))
+        ((and (>= value 112.5) (<= value 157.5))
+         (string ?S ?E))
+        ((and (>= value 157.5) (<= value 202.5))
+         (string ?S))
+        ((and (>= value 202.5) (<= value 247.5))
+         (string ?S ?W))
+        ((and (>= value 247.5) (<= value 292.5))
+         (string ?W))
+        ((and (>= value 292.5) (<= value 337.5))
+         (string ?N ?W))))
+
 ;;; ======== formatting functions for current forecast ========
 
 (defun openweather--format-current--dt (value)
@@ -260,7 +279,9 @@ Requires your OpenWeatherMap AppID."
 (defun openweather--format-current--wind_deg (value)
   "Format wind direction in current forecast."
   (openweather--insert 'font-lock-keyword-face
-                       (format "*** Wind direction %s°\n" value)))
+                       (format "*** Wind direction %s° (%s)\n"
+                               value
+                               (openweather--calculate-wind_dir value))))
 
 (defun openweather--format-current--weather (attributes)
   "Format weather summary in current forecast."
@@ -363,7 +384,9 @@ Requires your OpenWeatherMap AppID."
 (defun openweather--format-hourly--wind_deg (value)
   "Format wind direction in hourly forecast."
   (openweather--insert 'font-lock-keyword-face
-                       (format "*** Wind direction %s°\n" value)))
+                       (format "*** Wind direction %s° (%s)\n"
+                               value
+                               (openweather--calculate-wind_dir value))))
 
 (defun openweather--format-hourly--weather (attributes)
   "Format weather summary in hourly forecast."
@@ -464,7 +487,9 @@ Requires your OpenWeatherMap AppID."
 (defun openweather--format-daily--wind_deg (value)
   "Format wind direction in daily forecast."
   (openweather--insert 'font-lock-keyword-face
-                       (format "*** Wind direction %s°\n" value)))
+                       (format "*** Wind direction %s° (%s)\n"
+                               value
+                               (openweather--calculate-wind_dir value))))
 
 (defun openweather--format-daily--weather (attributes)
   "Format weather summary in daily forecast."
