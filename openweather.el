@@ -179,7 +179,7 @@ Requires your OpenWeatherMap AppID."
 
 (defun openweather--calculate-wind_dir (value)
   "Calculate wind direction from degrees."
-  (cond ((and (>= value 337.5) (<= value 22.5))
+  (cond ((or (>= value 337.5) (<= value 22.5))
          (string ?N))
         ((and (>= value 22.5) (<= value 67.5))
          (string ?N ?E))
