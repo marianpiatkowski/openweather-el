@@ -357,6 +357,11 @@ Requires your OpenWeatherMap AppID."
                          (concat "*** Dewpoint temperature "
                                  (format "%s%s\n" value temp-symbol)))))
 
+(defun openweather--format-hourly--uvi (value)
+  "Format UV index in hourly forecast."
+  (openweather--insert 'font-lock-keyword-face
+                       (format "*** UV index %s\n" value)))
+
 (defun openweather--format-hourly--clouds (value)
   "Format cloudiness in hourly forecast."
   (openweather--insert 'font-lock-keyword-face
