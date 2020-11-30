@@ -633,7 +633,7 @@ If NO-SWITCH is non-nil then do not switch to weather forecast buffer."
                                          openweather-units)))
           (url-retrieve url
                         (lambda (status start-time)
-                          (message "The request is completed in %f seconds"
+                          (message "The request completed in %f seconds"
                                    (float-time (time-subtract nil start-time)))
                           ;; (display-buffer (current-buffer))
                           (save-excursion
