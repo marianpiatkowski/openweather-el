@@ -586,7 +586,7 @@ Requires your OpenWeatherMap AppID."
   (dotimes (n (length attributes))
     (if (= 0 (% n 5))
         (openweather--insert 'font-lock-keyword-face "***"))
-    ;; now iterate over list for this element from json array
+    ;; now iterate over list for this json array element
     (dolist (attr (elt attributes n))
       (let ((formatter (intern (concat "openweather--format-minutely--"
                                        (symbol-name (car attr))))))
@@ -603,7 +603,7 @@ Requires your OpenWeatherMap AppID."
   (dotimes (n (length attributes))
     (openweather--insert 'font-lock-function-name-face
                          "** Hourly for ")
-    ;; now iterate over list for this element from json array
+    ;; now iterate over list for this json array element
     (dolist (attr (elt attributes n))
       (let ((formatter (intern (concat "openweather--format-hourly--"
                                        (symbol-name (car attr))))))
@@ -617,7 +617,7 @@ Requires your OpenWeatherMap AppID."
   (dotimes (n (length attributes))
     (openweather--insert 'font-lock-function-name-face
                          "** Daily for ")
-    ;; now iterate over list for this element from json array
+    ;; now iterate over list for this json array element
     (dolist (attr (elt attributes n))
       (let ((formatter (intern (concat "openweather--format-daily--"
                                        (symbol-name (car attr))))))
