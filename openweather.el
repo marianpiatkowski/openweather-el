@@ -530,6 +530,33 @@ Requires your OpenWeatherMap AppID."
   (openweather--insert 'font-lock-keyword-face
                        (format "*** Snow %smm\n" value)))
 
+;;; ======== formatting functions for alerts ========
+
+(defun openweather--format-alert--sender_name (value)
+  "Format name of the alert source."
+  (openweather--insert 'font-lock-keyword-face
+                       (format "*** Sender name %s\n" value)))
+
+(defun openweather--format-alert--event (value)
+  "Format name of alert event."
+  (openweather--insert 'font-lock-keyword-face
+                       (format "*** Event %s\n" value)))
+
+(defun openweather--format-alert--start (value)
+  "Format date and time of the start of the alert."
+  (openweather--insert 'font-lock-keyword-face
+                       (format-time-string "*** Start %A %F %T\n" value)))
+
+(defun openweather--format-alert--end (value)
+  "Format date and time of the end of the alert."
+  (openweather--insert 'font-lock-keyword-face
+                       (format-time-string "*** End %A %F %T\n" value)))
+
+(defun openweather--format-alert--description (value)
+  "Format description of the alert."
+  (openweather--insert 'font-lock-keyword-face
+                       (format "*** Description %s\n" value)))
+
 ;;; ======== end of formatting functions ========
 
 ;;; ======== functions for processing type of forecast ========
@@ -604,6 +631,21 @@ Requires your OpenWeatherMap AppID."
                                                                          (cdr (assoc 'sunrise (elt attributes n))))))
     (insert "\n")))
 
+(defun openweather--process-alerts (attributes)
+  "Format announced weather alerts."
+  ;; loop over json array and extract each element
+  (dotimes (n (length attributes))
+    (openweather--insert 'font-lock-function-name-face
+                         "** Alerts ")
+    ;; now iterate over list for this json array element
+    (dolist (attr (elt attributes n))
+      (let ((formatter (intern (concat "openweather--format-alert--"
+                                       (symbol-name (car attr))))))
+        (if (fboundp formatter)
+            (funcall formatter (cdr attr))
+          (insert (format "Unknown entry %s\n" attr)))))
+    (insert "\n")))
+
 ;;; ======== end of functions for processing type of forecast ========
 
 ;;;###autoload
@@ -661,6 +703,7 @@ If NO-SWITCH is non-nil then do not switch to weather forecast buffer."
         ;; - openweather--process-minutely
         ;; - openweather--process-hourly
         ;; - openweather--process-daily
+        ;; also consider alerts, call function openweather--process-alerts
         ;; start from the fifth list element on in openweather--data
         (dolist (entry (nthcdr 4 openweather--data))
           (let ((formatter (intern (concat "openweather--process-"
