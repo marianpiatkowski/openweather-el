@@ -636,15 +636,14 @@ Requires your OpenWeatherMap AppID."
   ;; loop over json array and extract each element
   (dotimes (n (length attributes))
     (openweather--insert 'font-lock-function-name-face
-                         "** Alerts ")
+                         "** Alerts\n")
     ;; now iterate over list for this json array element
     (dolist (attr (elt attributes n))
       (let ((formatter (intern (concat "openweather--format-alert--"
                                        (symbol-name (car attr))))))
         (if (fboundp formatter)
             (funcall formatter (cdr attr))
-          (insert (format "Unknown entry %s\n" attr)))))
-    (insert "\n")))
+          (insert (format "Unknown entry %s\n" attr)))))))
 
 ;;; ======== end of functions for processing type of forecast ========
 
