@@ -554,8 +554,12 @@ Requires your OpenWeatherMap AppID."
 
 (defun openweather--format-alert--description (value)
   "Format description of the alert."
-  (openweather--insert 'font-lock-keyword-face
-                       (format "*** Description %s\n" value)))
+  (let ((descr-per-line (split-string value "[\n]+")))
+    (openweather--insert 'font-lock-keyword-face
+                         (format "*** Description %s\n" (car descr-per-line)))
+    (dolist (elem (cdr descr-per-line))
+      (openweather--insert 'font-lock-keyword-face
+                           (format "    %s\n" elem)))))
 
 ;;; ======== end of formatting functions ========
 
