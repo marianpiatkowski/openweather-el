@@ -1,6 +1,6 @@
 ;;; openweather.el --- Weather data from OpenWeather in Emacs
 
-;; Copyright (C) 2020 Marian Piatkowski <marianpiatkowski@web.de>
+;; Copyright (C) 2020- Marian Piatkowski <marianpiatkowski@web.de>
 
 ;; Author: Marian Piatkowski <marianpiatkowski@web.de>
 ;; URL: https://github.com/marianpiatkowski/openweather-el
