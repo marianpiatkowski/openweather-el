@@ -652,9 +652,8 @@ Requires your OpenWeatherMap AppID."
 ;;; ======== end of functions for processing type of forecast ========
 
 ;;;###autoload
-(defun openweather-update (&optional no-switch)
-  "Display weather forecast.
-If NO-SWITCH is non-nil then do not switch to weather forecast buffer."
+(defun openweather-build-forecast-buffer ()
+  "Display weather forecast."
   (interactive)
   (with-current-buffer (get-buffer-create openweather-buffer-name)
     (save-excursion
@@ -673,34 +672,6 @@ If NO-SWITCH is non-nil then do not switch to weather forecast buffer."
         (openweather--insert 'openweather-date
                              "* For "
                              (format-time-string "%A %Y-%m-%d") "\n")
-        (let ((url (openweather-make-url openweather-location-latitude
-                                         openweather-location-longitude
-                                         openweather-units)))
-          (url-retrieve url
-                        (lambda (status start-time)
-                          (message "The request completed in %f seconds"
-                                   (float-time (time-subtract nil start-time)))
-                          ;; (display-buffer (current-buffer))
-                          (save-excursion
-                            (goto-char (point-min))
-                            (unless (search-forward "\n\n" nil t)
-                              (kill-buffer)
-                              (error "Error in http reply"))
-                            (let ((headers (buffer-substring (point-min) (point))))
-                              (unless (string-match-p
-                                       (concat "^HTTP/1.1 "
-                                               "\\(200 OK\\|203 "
-                                               "Non-Authoritative Information\\)")
-                                       headers)
-                                (kill-buffer)
-                                (error "Unable to fetch data"))
-                              (url-store-in-cache (current-buffer))
-                              (setq openweather--data (json-read))
-                              (kill-buffer)))
-                          )
-                        `(,(current-time))
-                        'silent
-                        'inhibit-cookies))
         ;; process current, every minute, hourly and daily forecast by calling the functions
         ;; - openweather--process-current
         ;; - openweather--process-minutely
@@ -722,8 +693,42 @@ If NO-SWITCH is non-nil then do not switch to weather forecast buffer."
 
         )) ;; end of let and save-excursion
     (goto-char (point-min)))
-  (unless no-switch
-    (switch-to-buffer openweather-buffer-name)))
+  (switch-to-buffer openweather-buffer-name))
+
+;;;###autoload
+(defun openweather-update ()
+  "Update weather data."
+  (interactive)
+  (let ((url (openweather-make-url openweather-location-latitude
+                                   openweather-location-longitude
+                                   openweather-units)))
+    (url-retrieve url
+                  (lambda (status start-time)
+                    (message "The request completed in %f seconds"
+                             (float-time (time-subtract nil start-time)))
+                    ;; (display-buffer (current-buffer))
+                    (save-excursion
+                      (goto-char (point-min))
+                      (unless (search-forward "\n\n" nil t)
+                        (kill-buffer)
+                        (error "Error in http reply"))
+                      (let ((headers (buffer-substring (point-min) (point))))
+                        (unless (string-match-p
+                                 (concat "^HTTP/1.1 "
+                                         "\\(200 OK\\|203 "
+                                         "Non-Authoritative Information\\)")
+                                 headers)
+                          (kill-buffer)
+                          (error "Unable to fetch data"))
+                        (url-store-in-cache (current-buffer))
+                        (setq openweather--data (json-read))
+                        (kill-buffer))
+                      (openweather-build-forecast-buffer))
+                    )
+                  `(,(current-time))
+                  'silent
+                  'inhibit-cookies))
+  )
 
 (provide 'openweather)
 
