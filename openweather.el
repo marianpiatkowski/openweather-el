@@ -440,6 +440,23 @@ Requires your OpenWeatherMap AppID."
     (openweather--insert 'font-lock-keyword-face
                          (format "*** Sunset %02d:%02d:%02d\n" (nth 2 d) (nth 1 d) (nth 0 d)))))
 
+(defun openweather--format-daily--moonrise (value)
+  "Format time of daily moonrise."
+  (let ((d (decode-time (seconds-to-time value))))
+    (openweather--insert 'font-lock-keyword-face
+                         (format "*** Moonrise %02d:%02d:%02d\n" (nth 2 d) (nth 1 d) (nth 0 d)))))
+
+(defun openweather--format-daily--moonset (value)
+  "Format time of daily moonset."
+  (let ((d (decode-time (seconds-to-time value))))
+    (openweather--insert 'font-lock-keyword-face
+                         (format "*** Moonset %02d:%02d:%02d\n" (nth 2 d) (nth 1 d) (nth 0 d)))))
+
+(defun openweather--format-daily--moon_phase (value)
+  "Format daily moonphase."
+  (openweather--insert 'font-lock-keyword-face
+                       (format "*** Moon phase %s\n" value)))
+
 (defun openweather--format-daily--temp (attributes)
   "Format temperature in daily forecast."
   (openweather--insert 'font-lock-keyword-face "*** Temperature")
