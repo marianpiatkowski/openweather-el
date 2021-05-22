@@ -578,6 +578,16 @@ Requires your OpenWeatherMap AppID."
       (openweather--insert 'font-lock-keyword-face
                            (format "    %s\n" elem)))))
 
+(defun openweather--format-alert--tags (attributes)
+  "Format tags of the alert."
+  (openweather--insert 'font-lock-keyword-face
+                       "*** Tags")
+  ;; loop over json array and extract each element
+  (dotimes (n (length attributes))
+    (openweather--insert 'font-lock-keyword-face
+                         (format " %s" (elt attributes n))))
+  (insert "\n"))
+
 ;;; ======== end of formatting functions ========
 
 ;;; ======== functions for processing type of forecast ========
