@@ -160,7 +160,7 @@ You should get it by logging-in to your account and settings this variable."
 (defun openweather-make-url (lat lon units &optional msl)
   "Create the URL from LAT and LON in UNITS to be used by `openweather-update'.
 Requires your OpenWeatherMap AppID."
-  (format "https://api.openweathermap.org/data/2.5/onecall?lat=%s&lon=%s&appid=%s&mode=json&units=%s&cnt=5"
+  (format "https://api.openweathermap.org/data/3.0/onecall?lat=%s&lon=%s&appid=%s&mode=json&units=%s&cnt=5"
           lat lon openweather-appid (url-encode-url (symbol-name units))))
 
 (defun openweather-temperature-unit ()
@@ -456,6 +456,11 @@ Requires your OpenWeatherMap AppID."
   "Format daily moonphase."
   (openweather--insert 'font-lock-keyword-face
                        (format "*** Moon phase %s\n" value)))
+
+(defun openweather--format-daily--summary (value)
+  "Format human-readable description of the weather conditions for the day."
+  (openweather--insert 'font-lock-keyword-face
+                       (format "*** Summary - %s\n" value)))
 
 (defun openweather--format-daily--temp (attributes)
   "Format temperature in daily forecast."
