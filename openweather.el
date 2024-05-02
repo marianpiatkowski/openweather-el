@@ -712,8 +712,8 @@ Requires your OpenWeatherMap AppID."
         ;; also consider alerts, call function openweather--process-alerts
         ;; permute alerts right after every minute forecast preserving remaining order
         (if (= 9 (length openweather--data))
-            (progn (rotatef (nth 8 openweather--data) (nth 6 openweather--data))
-                   (rotatef (nth 8 openweather--data) (nth 7 openweather--data))))
+            (progn (cl-rotatef (nth 8 openweather--data) (nth 6 openweather--data))
+                   (cl-rotatef (nth 8 openweather--data) (nth 7 openweather--data))))
         ;; start from the fifth list element on in openweather--data
         (dolist (entry (nthcdr 4 openweather--data))
           (let ((formatter (intern (concat "openweather--process-"
